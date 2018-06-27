@@ -44,7 +44,7 @@ model.compile(loss='binary_crossentropy',
                 metrics=['accuracy'])
 
 
-model.load_weights(os.path.join(result_dir, 'smallcnn.h5', grayscale=True))
+model.load_weights(os.path.join(result_dir, 'smallcnn.h5'))
 
 model.compile(loss='binary_crossentropy',
               optimizer='adam',
@@ -52,7 +52,7 @@ model.compile(loss='binary_crossentropy',
 # model.summary()
 
 # 画像を読み込んで4次元テンソルへ変換
-img = image.load_img(filename, target_size=(img_height, img_width))
+img = image.load_img(filename, target_size=(img_height, img_width), grayscale=True)
 x = image.img_to_array(img)
 x = np.expand_dims(x, axis=0)
 
