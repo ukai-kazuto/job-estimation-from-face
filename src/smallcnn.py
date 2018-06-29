@@ -25,7 +25,7 @@ def save_history(history, result_file):
 
 
 if __name__ == '__main__':
-    # モデルを構築
+    # build model
     model = Sequential()
     model.add(Convolution2D(32, 3, 3, input_shape=(150, 150, 1)))
     model.add(Activation('relu'))
@@ -50,7 +50,7 @@ if __name__ == '__main__':
                   optimizer='adam',
                   metrics=['accuracy'])
 
-    # 訓練データとバリデーションデータを生成するジェネレータを作成
+    # create train data & valid data
     train_datagen = ImageDataGenerator(
         rescale=1.0 / 255,
         shear_range=0.2,
@@ -62,18 +62,20 @@ if __name__ == '__main__':
     train_generator = train_datagen.flow_from_directory(
         'data/train',
         target_size=(150, 150),
+	color_mode='grayscale',
         batch_size=32,
-        color_mode='grayscale',
         class_mode='categorical')
 
     validation_generator = test_datagen.flow_from_directory(
         'data/validation',
         target_size=(150, 150),
-        batch_size=32,
         color_mode='grayscale',
+	batch_size=32,
         class_mode='categorical')
 
-    # 訓練
+    print(train_generator.class_indices)
+
+    # training
     history = model.fit_generator(
         train_generator,
         samples_per_epoch=2000,
@@ -81,7 +83,7 @@ if __name__ == '__main__':
         validation_data=validation_generator,
         nb_val_samples=800)
 
-    # 結果を保存
+    # save result
     model.save_weights(os.path.join(result_dir, 'smallcnn.h5'))
     save_history(history, os.path.join(result_dir, 'history_smallcnn.txt'))
 
